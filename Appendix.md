@@ -1,3 +1,5 @@
+[toc]
+
 # 1
 
 ## 1.1Word corrected
@@ -154,4 +156,105 @@ if __name__ == '__main__':
     ratio_arr = np.array(ratio_list, dtype='float16')
 
     print(dist_correlation(feq_arr, ratio_arr))
+```
+
+
+
+# 2.
+
+## 2.1 Linear regression
+
+```python
+import numpy as np
+import sklearn
+import openpyxl
+
+
+def load_data():
+    wb = openpyxl.load_workbook('E:/Git/mcm/mcm/wordle_data.xlsx')
+    sheet = wb.active
+
+    word_freq = []
+    letter_freq = []
+    repetitive_letter = []
+    morphemes_count = []
+    for i in range(3, 362):
+        word_freq.append(sheet['T' + str(i)].value)
+        letter_freq.append(sheet['U' + str(i)].value)
+        repetitive_letter.append(sheet['R' + str(i)].value)
+        morphemes_count.append(sheet['S' + str(i)].value)
+
+    train_data = [word_freq.copy(), letter_freq.copy(), repetitive_letter.copy(), morphemes_count.copy()]
+
+    word_freq.clear()
+    letter_freq.clear()
+    repetitive_letter.clear()
+    morphemes_count.clear()
+    for i in range(303, 362):
+        word_freq.append(sheet['T' + str(i)].value)
+        letter_freq.append(sheet['U' + str(i)].value)
+        repetitive_letter.append(sheet['R' + str(i)].value)
+        morphemes_count.append(sheet['S' + str(i)].value)
+
+    test_data = [word_freq, letter_freq, repetitive_letter, morphemes_count]
+
+    return np.array(train_data).T, np.array(test_data).T
+
+
+def load_label():
+    wb = openpyxl.load_workbook('E:/Git/mcm/mcm/wordle_data.xlsx')
+    sheet = wb.active
+
+    one_list = []
+    two_list = []
+    three_list = []
+    four_list = []
+    five_list = []
+    six_list = []
+    X_list = []
+
+    for i in range(3, 362):
+        one_list.append(sheet['G' + str(i)].value)
+        two_list.append(sheet['H' + str(i)].value)
+        three_list.append(sheet['I' + str(i)].value)
+        four_list.append(sheet['J' + str(i)].value)
+        five_list.append(sheet['K' + str(i)].value)
+        six_list.append(sheet['L' + str(i)].value)
+        X_list.append(sheet['M' + str(i)].value)
+
+    train_label = [one_list.copy(), two_list.copy(), three_list.copy(), four_list.copy(), five_list.copy(),
+                   six_list.copy(), X_list.copy()]
+
+    one_list.clear()
+    two_list.clear()
+    three_list.clear()
+    four_list.clear()
+    five_list.clear()
+    six_list.clear()
+    X_list.clear()
+
+    for i in range(303, 362):
+        one_list.append(sheet['G' + str(i)].value)
+        two_list.append(sheet['H' + str(i)].value)
+        three_list.append(sheet['I' + str(i)].value)
+        four_list.append(sheet['J' + str(i)].value)
+        five_list.append(sheet['K' + str(i)].value)
+        six_list.append(sheet['L' + str(i)].value)
+        X_list.append(sheet['M' + str(i)].value)
+
+    test_label = [one_list, two_list, three_list, four_list, five_list, six_list, X_list]
+
+    return np.array(train_label).T, np.array(test_label).T
+
+
+if __name__ == '__main__':
+    train_data, test_data = load_data()
+    train_label, test_label = load_label()
+
+    model = sklearn.linear_model.LinearRegression()
+    model.fit(train_data, train_label)
+    # predictions = lr.predict(test_data)
+
+    loss = model.score(train_data, train_label)
+    print('R^2: {}'.format(loss))
 ```
