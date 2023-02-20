@@ -158,15 +158,13 @@ if __name__ == '__main__':
     print(dist_correlation(feq_arr, ratio_arr))
 ```
 
-
-
 # 2.
 
 ## 2.1 Linear regression
 
 ```python
 import numpy as np
-import sklearn
+from sklearn.linear_model import LinearRegression
 import openpyxl
 
 
@@ -251,9 +249,10 @@ if __name__ == '__main__':
     train_data, test_data = load_data()
     train_label, test_label = load_label()
 
-    model = sklearn.linear_model.LinearRegression()
+    model = LinearRegression()
     model.fit(train_data, train_label)
-    # predictions = lr.predict(test_data)
+    predictions = model.predict([[0.0012319163158116, 1.13971071663379, 3, 1]])
+    print(predictions)
 
     loss = model.score(train_data, train_label)
     print('R^2: {}'.format(loss))
